@@ -15,7 +15,7 @@ A Django-based face recognition system to manage student attendance. Students ca
 - **Face Recognition:** OpenCV and Dlib
 - **Frontend:** HTML, CSS, Bootstrap (via crispy forms)
 
-## Installation
+## Getting Started
 
 ### Prerequisites
 Ensure you have the following installed:
@@ -23,42 +23,43 @@ Ensure you have the following installed:
 - MySQL database
 - pip (Python package installer)
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Rajesh2825/Presence.git
-```
-```bash
-cd Presence
-```
+## Installation
+1. Clone the Repository
+   ```bash
+   git clone https://github.com/Rajesh2825/Presence.git
+   ```
+   ```bash
+   cd Presence
+   ```
 
 
-### 2. Create a virtual environment (recommended):
-```bash
-python -m venv env
-source env/bin/activate  # On Windows use `.\env\Scripts\activate`
-```
+2. Create a virtual environment (recommended):
+   ```bash
+   python -m venv env
+   source env/bin/activate  # On Windows use `.\env\Scripts\activate`
+   ```
 
-### 3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 4. Set up environment variables: Create a `project.env` file in the project root with the following structure:
-```plaintext
-SECRET_KEY=your_django_secret_key
-DB_NAME=your_database_name
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
-DB_HOST=localhost
-DB_PORT=3306
-```
+4. Set up environment variables: Create a `project.env` file in the project root with the following structure:
+   ```plaintext
+   SECRET_KEY=your_django_secret_key
+   DB_NAME=your_database_name
+   DB_USER=your_database_user
+   DB_PASSWORD=your_database_password
+   DB_HOST=localhost
+   DB_PORT=3306
+   ```
 
-### 5. Set up your MySQL database:
+5. Set up your MySQL database:
    - Open MySQL and create a database named `face_recognition_attendance`:
      ```sql
      CREATE DATABASE face_recognition_attendance;
      ```
-### 6. Create a Faculty Account:
+6. Create a Faculty Account:
    - Create a faculty user with is_faculty = True in your Django admin panel or via the Django shell. Here’s how to do it via the shell:
      ```bash
      python manage.py shell
@@ -73,32 +74,31 @@ DB_PORT=3306
      Replace 'faculty_username' and 'faculty_password' with desired credentials.
 
 
-### 7. Apply migrations:
-```bash
-python manage.py makemigrations
-```
-```bash
-python manage.py migrate
-```
+7. Apply migrations:
+   ```bash
+   python manage.py makemigrations
+   ```
+   ```bash
+   python manage.py migrate
+   ```
 
-### 8. Run the development server:
-```bash
-python manage.py runserver
-```
+8. Run the development server:
+   ```bash
+   python manage.py runserver
+   ```
 
-### 9. Visit `http://127.0.0.1:8000` to see the website in action.
+ 9. Visit `http://127.0.0.1:8000` to see the website in action.
 
-### 10. Register Student with there face image:
+10. Register Student with there face image:
   1. Log in to the Faculty dashboard with your faculty credentials.
   2. Navigate to the Register Student section and add new students with there image.
 
-### 11. Train Face Recognition Model for Added Students:
+11. Train Face Recognition Model for Added Students:
   - After adding students, you will need to train the system with their face:
     - for that you need to click on start training in faculty dashboard.
     - it will take you to train_face page you need to wait until its train face.
 
-### 12. Now, you are ready to scan students faces and make attendance in and out.
-
+12. Now, you are ready to scan students faces and make attendance in and out.
 
 
 ## Usage
@@ -107,34 +107,30 @@ python manage.py runserver
 - **Faculty Login:** Faculty log in with admin permissions to view and manage all student attendance records.
 
 
+
 ## Screenshots
 
 ### Home Page
-![Home Page](website_img/homepage.png)
+![Home Page](website_img/homepage_1.png)
+![Home Page](website_img/homepage_2.png)
 
-### Product Page
-![Product Page](website_img/product.png)
+### Marking Attendance
+![Product Page](website_img/attendance_mark.png)
 
-### Shoping Page
-![Product Page](website_img/shop.png)
+### Student Dashboard
+![Product Page](website_img/student_dashboard.png)
 
-### Wish list Page
-![Shopping Cart](website_img/wishlist.png)
+### Student Attendance Record
+![Shopping Cart](website_img/student_attendance_record.png)
 
-### Shoping Cart Page
-![Admin Panel](website_img/cart.png)
+### Faculty Dashboard
+![Admin Panel](website_img/faculty_dashboard.png)
 
-### Checkout Page
-![Admin Panel](website_img/checkout.png)
+### Faculty View for Students Attendance Record
+![Admin Panel](website_img/faculty_student_attendance_record.png)
 
-### Payment Page
-![Admin Panel](website_img/payment.png)
-
-### Confirm Order Page
-![Admin Panel](website_img/confirm_order.png)
-
-### Orders Page
-![Admin Panel](website_img/order.png)
+### Faculty view for single Student Attendance record
+![Admin Panel](website_img/faculty_single_student_record.png)
 
 
 
