@@ -59,18 +59,18 @@ cd Presence
      CREATE DATABASE face_recognition_attendance;
      ```
 6. Create a Faculty Account:
-  - Create a faculty user with is_faculty = True in your Django admin panel or via the Django shell. Here’s how to do it via the shell:
-    ```bash
-    python manage.py shell
-    ```
-    Then run:
-    ```bash
-    from attendance.models import User
-    ```
-    ```bash
-    User.objects.create_user(username='faculty_username', password='faculty_password', is_faculty=True)
-    ```
-    Replace 'faculty_username' and 'faculty_password' with desired credentials.
+   - Create a faculty user with is_faculty = True in your Django admin panel or via the Django shell. Here’s how to do it via the shell:
+     ```bash
+     python manage.py shell
+     ```
+     Then run:
+     ```bash
+     from attendance.models import User
+     ```
+     ```bash
+     User.objects.create_user(username='faculty_username', password='faculty_password', is_faculty=True)
+     ```
+     Replace 'faculty_username' and 'faculty_password' with desired credentials.
 
 
 7. Apply migrations:
