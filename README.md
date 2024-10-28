@@ -90,13 +90,13 @@ Ensure you have the following installed:
  9. Visit `http://127.0.0.1:8000` to see the website in action.
 
 10. Register Student with there face image:
-  1. Log in to the Faculty dashboard with your faculty credentials.
-  2. Navigate to the Register Student section and add new students with there image.
+   - Log in to the Faculty dashboard with your faculty credentials.
+   - Navigate to the Register Student section and add new students with there image.
 
 11. Train Face Recognition Model for Added Students:
-  - After adding students, you will need to train the system with their face:
-    - for that you need to click on start training in faculty dashboard.
-    - it will take you to train_face page you need to wait until its train face.
+   - After adding students, you will need to train the system with their face:
+   - for that you need to click on start training in faculty dashboard.
+   - it will take you to train_face page you need to wait until its train face.
 
 12. Now, you are ready to scan students faces and make attendance in and out.
 
