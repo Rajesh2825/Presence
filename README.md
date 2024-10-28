@@ -32,7 +32,6 @@ Ensure you have the following installed:
    cd Presence
    ```
 
-
 2. Create a virtual environment (recommended):
    ```bash
    python -m venv env
@@ -59,6 +58,7 @@ Ensure you have the following installed:
      ```sql
      CREATE DATABASE face_recognition_attendance;
      ```
+     
 6. Create a Faculty Account:
    - Create a faculty user with is_faculty = True in your Django admin panel or via the Django shell. Here’s how to do it via the shell:
      ```bash
@@ -72,7 +72,6 @@ Ensure you have the following installed:
      User.objects.create_user(username='faculty_username', password='faculty_password', is_faculty=True)
      ```
      Replace 'faculty_username' and 'faculty_password' with desired credentials.
-
 
 7. Apply migrations:
    ```bash
@@ -89,16 +88,20 @@ Ensure you have the following installed:
 
  9. Visit `http://127.0.0.1:8000` to see the website in action.
 
+
 10. Register Student with there face image:
       - Log in to the Faculty dashboard with your faculty credentials.
       - Navigate to the Register Student section and add new students with there image.
+
 
 11. Train Face Recognition Model for Added Students:
       - After adding students, you will need to train the system with their face:
       - for that you need to click on start training in faculty dashboard.
       - it will take you to train_face page you need to wait until its train face.
 
+
 12. Now, you are ready to scan students faces and make attendance in and out.
+
 
 
 ## Usage
