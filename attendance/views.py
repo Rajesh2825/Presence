@@ -308,7 +308,8 @@ def mark_attendance_in(request):
                                 matched_student = student_encodings[first_match_index][1]
 
                                 if matched_student.id not in marked_students:
-                                    mark_attendance_in_db(matched_student.user)
+                                    response = mark_attendance_in_db(matched_student.user)
+                                    messages.success(request, response['message']) 
                                     marked_students.add(matched_student.id)
 
                                 (top, right, bottom, left) = face_location 
@@ -330,10 +331,10 @@ def mark_attendance_in(request):
             cv2.destroyAllWindows()
             return redirect('/') 
         except Exception as e:
-            print(f"An error occurred: {str(e)}")
+            messages.error(request, "An error occurred while marking attendance.")
             return redirect('/') 
     else:
-        print("Invalid request method.")
+        messages.error(request, "Invalid request method.")
         return redirect('/') 
         
 def mark_attendance_in_db(user):
@@ -350,34 +351,34 @@ def mark_attendance_in_db(user):
 
         if not created:
             if attendance_record.status == 'present':
-                return JsonResponse({
+                return {
                     'status': 'success',
                     'message': f"Attendance already marked for {student.name} on {today}."
-                })
+                }
             else:
                 attendance_record.status = 'present'
                 attendance_record.check_in_time = timezone.now()
                 attendance_record.save()
-                return JsonResponse({
+                return {
                     'status': 'success',
                     'message': f"Attendance marked for {student.name} on {today}."
-                })
+                }
         else:
-            return JsonResponse({
+            return {
                 'status': 'success',
                 'message': f"Attendance marked for {student.name} on {today}."
-            })
+            }
 
     except Student.DoesNotExist:
-        return JsonResponse({
+        return {
             'status': 'error',
             'message': "Student does not exist."
-        }, status=404)
+        }
     except Exception as e:
-        return JsonResponse({
+        return {
             'status': 'error',
             'message': f"An error occurred while marking attendance: {str(e)}"
-        }, status=500)
+        }
         
         
         
