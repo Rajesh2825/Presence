@@ -99,7 +99,8 @@ python manage.py runserver
 
 ### 12. Now, you are ready to scan students faces and make attendance in and out.
 
-<br>
+
+
 ## Usage
 - **Marking Attendance:** Student can mark there attendance in and out using its face scanning.
 - **Student Login:** Students log in with their credentials to access their dashboard and view attendance records.
