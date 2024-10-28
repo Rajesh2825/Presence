@@ -33,25 +33,25 @@ cd Presence
 
 
 ### 2. Create a virtual environment (recommended):
-    ```bash
-    python -m venv env
-    source env/bin/activate  # On Windows use `.\env\Scripts\activate`
-    ```
+```bash
+python -m venv env
+source env/bin/activate  # On Windows use `.\env\Scripts\activate`
+```
 
 ### 3. Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
 ### 4. Set up environment variables: Create a `project.env` file in the project root with the following structure:
-    ```plaintext
-    SECRET_KEY=your_django_secret_key
-    DB_NAME=your_database_name
-    DB_USER=your_database_user
-    DB_PASSWORD=your_database_password
-    DB_HOST=localhost
-    DB_PORT=3306
-    ```
+```plaintext
+SECRET_KEY=your_django_secret_key
+DB_NAME=your_database_name
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_HOST=localhost
+DB_PORT=3306
+```
 
 ### 5. Set up your MySQL database:
    - Open MySQL and create a database named `face_recognition_attendance`:
@@ -74,17 +74,17 @@ cd Presence
 
 
 ### 7. Apply migrations:
-    ```bash
-    python manage.py makemigrations
-    ```
-    ```bash
-     python manage.py migrate
-    ```
+```bash
+python manage.py makemigrations
+```
+```bash
+python manage.py migrate
+```
 
 ### 8. Run the development server:
-    ```bash
-    python manage.py runserver
-    ```
+```bash
+python manage.py runserver
+```
 
 ### 9. Visit `http://127.0.0.1:8000` to see the website in action.
 
@@ -99,6 +99,7 @@ cd Presence
 
 ### 12. Now, you are ready to scan students faces and make attendance in and out.
 
+<br>
 ## Usage
 - **Marking Attendance:** Student can mark there attendance in and out using its face scanning.
 - **Student Login:** Students log in with their credentials to access their dashboard and view attendance records.
