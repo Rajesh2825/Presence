@@ -32,18 +32,18 @@ cd Presence
 ```
 
 
-2. Create a virtual environment (recommended):
+###2. Create a virtual environment (recommended):
     ```bash
     python -m venv env
     source env/bin/activate  # On Windows use `.\env\Scripts\activate`
     ```
 
-3. Install dependencies:
+###3. Install dependencies:
     ```bash
     pip install -r requirements.txt
     ```
 
-4. Set up environment variables: Create a `project.env` file in the project root with the following structure:
+###4. Set up environment variables: Create a `project.env` file in the project root with the following structure:
     ```plaintext
     SECRET_KEY=your_django_secret_key
     DB_NAME=your_database_name
@@ -53,12 +53,12 @@ cd Presence
     DB_PORT=3306
     ```
 
-5. Set up your MySQL database:
+###5. Set up your MySQL database:
    - Open MySQL and create a database named `face_recognition_attendance`:
      ```sql
      CREATE DATABASE face_recognition_attendance;
      ```
-6. Create a Faculty Account:
+###6. Create a Faculty Account:
    - Create a faculty user with is_faculty = True in your Django admin panel or via the Django shell. Here’s how to do it via the shell:
      ```bash
      python manage.py shell
@@ -73,7 +73,7 @@ cd Presence
      Replace 'faculty_username' and 'faculty_password' with desired credentials.
 
 
-7. Apply migrations:
+###7. Apply migrations:
     ```bash
     python manage.py makemigrations
     ```
@@ -81,23 +81,23 @@ cd Presence
      python manage.py migrate
     ```
 
-8. Run the development server:
+###8. Run the development server:
     ```bash
     python manage.py runserver
     ```
 
-9. Visit `http://127.0.0.1:8000` to see the website in action.
+###9. Visit `http://127.0.0.1:8000` to see the website in action.
 
-10. Register Student with there face image:
+###10. Register Student with there face image:
   1. Log in to the Faculty dashboard with your faculty credentials.
   2. Navigate to the Register Student section and add new students with there image.
 
-11. Train Face Recognition Model for Added Students:
+###11. Train Face Recognition Model for Added Students:
   - After adding students, you will need to train the system with their face:
     - for that you need to click on start training in faculty dashboard.
     - it will take you to train_face page you need to wait until its train face.
 
-12. Now, you are ready to scan students faces and make attendance in and out.
+###12. Now, you are ready to scan students faces and make attendance in and out.
 
 ## Usage
 - **Marking Attendance:** Student can mark there attendance in and out using its face scanning.
