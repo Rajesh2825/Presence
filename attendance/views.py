@@ -352,7 +352,6 @@ def mark_attendance_in_db(user):
         if not created:
             if attendance_record.status == 'present':
                 return {
-                    'status': 'success',
                     'message': f"Attendance already marked for {student.name} on {today}."
                 }
             else:
@@ -360,23 +359,19 @@ def mark_attendance_in_db(user):
                 attendance_record.check_in_time = timezone.now()
                 attendance_record.save()
                 return {
-                    'status': 'success',
                     'message': f"Attendance marked for {student.name} on {today}."
                 }
         else:
             return {
-                'status': 'success',
                 'message': f"Attendance marked for {student.name} on {today}."
             }
 
     except Student.DoesNotExist:
         return {
-            'status': 'error',
             'message': "Student does not exist."
         }
     except Exception as e:
         return {
-            'status': 'error',
             'message': f"An error occurred while marking attendance: {str(e)}"
         }
         
@@ -428,7 +423,8 @@ def mark_attendance_out(request):
                                 matched_student = student_encodings[first_match_index][1]
 
                                 if matched_student.id not in marked_students:
-                                    mark_attendance_out_db(matched_student.user)
+                                    response = mark_attendance_out_db(matched_student.user)
+                                    messages.success(request, response['message']) 
                                     marked_students.add(matched_student.id)
 
                                 (top, right, bottom, left) = face_location 
@@ -450,10 +446,10 @@ def mark_attendance_out(request):
             cv2.destroyAllWindows()
             return redirect('/') 
         except Exception as e:
-            print(f"An error occurred: {str(e)}")
+            messages.error(request, "An error occurred while marking attendance.")
             return redirect('/') 
     else:
-        print("Invalid request method.")
+        messages.error(request, "Invalid request method.")
         return redirect('/') 
     
 def mark_attendance_out_db(user):
@@ -465,33 +461,28 @@ def mark_attendance_out_db(user):
 
         if attendance_record.check_in_time:
             if attendance_record.check_out_time:
-                return JsonResponse({
-                "status": "success",
+                return {
                 "message": f"Check-out already marked for {student.name} on {today}."
-                })
+                }
             else:
                 attendance_record.check_out_time = timezone.now()
                 attendance_record.save()
-                return JsonResponse({
-                "status": "success",
+                return {
                 "message": f"Check-out marked for {student.name} on {today}."
-                })
+                }
         else:
-            return JsonResponse({
-            "status": "error",
+            return {
             "message": f"No check-in record found for {student.name} on {today}. Cannot mark check-out."
-            })
+            }
             
     except Student.DoesNotExist:
-        return JsonResponse({
-        "status": "error",
+        return {
         "message": "Student does not exist."
-        }, status=404)
+        }
     except Exception as e:
-        return JsonResponse({
-        "status": "error",
+        return {
         "message": f"An error occurred while marking attendance: {str(e)}"
-        }, status=500)
+        }
         
         
         
