@@ -26,7 +26,7 @@ Ensure you have the following installed:
 ## Installation
 1. Clone the Repository
    ```bash
-   git clone https://github.com/Rajesh2825/Presence.git
+   git clone https://github.com/radadiya-rajesh/Presence.git
    ```
    ```bash
    cd Presence
