@@ -1,0 +1,129 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'recognition/css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <title>Attendance Records</title>
+  </head>
+  <body style="background-color: #0a3257">
+    <nav class="main-header navbar bg-white navbar-white p-0">
+      <a href="#" class="navbar-brand">
+        <img
+          src="{% static 'recognition/img/logo3.png' %}"
+          alt="AdminLTE Logo"
+          class="img-circle"
+          style="width: 140px; height: 60px; margin-left: 10px"
+        />
+      </a>
+      <h1 class="text-white text-center display-3 text-uppercase"></h1>
+      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+        <li class="nav-item dropdown">
+          <a
+            class="button btn btn-primary"
+            href="/student_dashboard/"
+            style="margin-right: 20px"
+            >Dashboard</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <div class="container text-white">
+      <h1 class="mt-5 text-center pb-4">Attendance Records</h1>
+  
+      <!-- Filter Form -->
+      <form method="GET" action="/view_student_attendance/" class="mb-5">
+          <div class="form-row">
+              <div class="col-12 col-md-4 mb-3">
+                  <input type="date" name="date" class="form-control" />
+              </div>
+              <div class="col-12 col-md-4 mb-3">
+                  <select name="month" class="form-control">
+                      <option value="">Filter by Month</option>
+                      <!-- Add options for months -->
+                      <option value="1">January</option>
+                      <option value="2">February</option>
+                      <option value="3">March</option>
+                      <option value="4">April</option>
+                      <option value="5">May</option>
+                      <option value="6">June</option>
+                      <option value="7">July</option>
+                      <option value="8">August</option>
+                      <option value="9">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
+                  </select>
+              </div>
+              <div class="col-12 col-md-4 mb-3">
+                  <select name="year" class="form-control">
+                      <option value="">Filter by Year</option>
+                      <option value="2024">2024</option>
+                      <option value="2023">2023</option>
+                      <option value="2022">2022</option>
+                      <option value="2021">2021</option>
+                      <option value="2020">2020</option>
+                  </select>
+              </div>
+              <div class="col-12 col-md-6 mb-3">
+                  <button type="submit" class="btn btn-primary w-100">Filter</button>
+              </div>
+              <div class="col-12 col-md-6 mb-3">
+                  <a href="/view_student_attendance/" class="btn btn-secondary w-100">Clear Filters</a>
+              </div>
+          </div>
+      </form>
+  
+      <div class="table-responsive">
+          <table class="table mt-3">
+              <thead>
+                  <tr>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Check-in Time</th>
+                      <th>Check-out Time</th>
+                      <th>Status</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for record in attendance_records %}
+                  <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ record.date }}</td>
+                      <td>{{ record.check_in_time|date:"H:i:s" }}</td>
+                      <td>{{ record.check_out_time|date:"H:i:s" }}</td>
+                      <td>{{ record.status }}</td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                      <td colspan="5" class="text-center">
+                          No attendance records found.
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+  
+
+    <footer style="background-color: white;">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h5 class="text-dark text-bold"> Copyright © 2024 All rights reserved.</h5>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  </body>
+</html>

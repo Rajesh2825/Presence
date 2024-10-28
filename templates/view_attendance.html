@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'recognition/css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <title>Attendance Records</title>
+  </head>
+  <body style="background-color: #0a3257">
+    <nav class="main-header navbar bg-white navbar-white p-0">
+      <a href="#" class="navbar-brand">
+        <img
+          src="{% static 'recognition/img/logo3.png' %}"
+          alt="AdminLTE Logo"
+          class="img-circle"
+          style="width: 180px; height: 60px; margin-left: 10px"
+        />
+      </a>
+      <h1 class="text-white text-center display-3 text-uppercase"></h1>
+      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+        <li class="nav-item dropdown">
+          <a
+            class="button btn btn-primary"
+            href="/faculty_dashboard/"
+            style="margin-right: 20px"
+            >Dashboard</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <div class="container text-white">
+      <h1 class="mt-5 text-center pb-4">Attendance Record for {{ current_month }}</h1>
+  
+      <!-- Filter Form -->
+      <form method="GET" action="/view_attendance/" class="mb-5">
+          <div class="form-row">
+              <div class="col-12 col-md-3 mb-3">
+                  <input type="text" name="student_name" class="form-control" placeholder="Filter by Student Name" value="{{ selected_student_name }}"/>
+              </div>
+              <div class="col-12 col-md-3 mb-3">
+                <select name="month" class="form-control">
+                  {% for month_num, month_name in months %}
+                    <option value="{{ month_num }}" {% if selected_month == month_num %}selected{% endif %}>{{ month_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-12 col-md-3 mb-3">
+                  <button type="submit" class="btn btn-primary w-100">Filter</button>
+              </div>
+              <div class="col-12 col-md-3 mb-3">
+                <a href="/view_attendance/" class="btn btn-secondary w-100">Clear Filters</a>
+              </div>
+          </div>
+      </form>
+      <div class="table-responsive">
+          <table class="table mt-3">
+              <thead>
+                  <tr>
+                      <th>#</th>
+                      <th>Student Name</th>
+                      <th class="text-center">Present Days</th>
+                      <th class="text-center">Absent Days</th>
+                      <th class="text-center">Present Percentage (%)</th>
+                      <th class="text-center">Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for student in students_attendance %}
+                  <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td >{{ student.name }}</td>
+                      <td class="text-center">{{ student.present_days }}</td>
+                      <td class="text-center">{{ student.absent_days }}</td>
+                      <td class="text-center">{{ student.present_percentage }}</td>
+                      <td class="text-center">
+                        <a href="/student_attendance_detail/{{student.id}}/">
+                          View
+                        </a>
+                      </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                      <td colspan="6" class="text-center">
+                         <h3 class="pt-4"> No attendance records found for {{current_month}} Month.</h3>
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+
+    <footer style="background-color: white;">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h5 class="text-dark text-bold"> Copyright © 2024 All rights reserved.</h5>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  </body>
+</html>

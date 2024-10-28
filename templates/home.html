@@ -1,0 +1,139 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Load Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- /*Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'recognition/css/bootstrap.min.css' %}">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'recognition/css/style1.css' %}">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'recognition/img/logo1.png' %}" />
+
+    <style>
+        /* Add custom CSS styles here */
+        body {
+            font-family: 'Oswald', sans-serif !important;
+        }
+        
+        /* Define styles for the main banner */
+        .main-banner {
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            padding-top: 150px;
+            padding-bottom: 130px;
+            text-align: center;
+            background-color: #0a3257;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navbar -->
+  <nav class="main-header navbar bg-white navbar-white p-0">
+    <a href="/" class="navbar-brand">
+      <img
+        src="{% static 'recognition/img/logo3.png' %}"
+        alt="AdminLTE Logo"
+        class="img-circle"
+        style="width: 120px; height: 60px; margin-left: 10px;"
+      />
+    </a>
+    <h1 class="text-white text-center display-3 text-uppercase"></h1>
+    <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+      <li class="nav-item dropdown">
+        <a
+          class="button btn btn-primary py-2 px-3"
+          href="/login_view/"
+          style="margin-right: 10px"
+          >Login</a
+        >
+      </li>
+    </ul>
+  </nav>
+    
+  <div class="main-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+          <div class="header-text text-white text-bold">
+            <h2>Automated Attendance <em>Management</em> System <em>Using Facial Recognition</em></h2>
+            <div class="buttons">
+              <div class="big-border-button">
+                <a class="button btn btn-primary" id="markattendance" href='/camera_view_in/'>Mark Attendance</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-heading text-center">
+            <h1 class="text-bold">Please Select Your option</h1>
+
+          </div>
+        </div>
+        <div class="col-lg-4 ">
+          <div class="pricing-item " style="background-color: #0a3257;">
+            <img src="{% static 'recognition/img/att.png' %}" alt="" style="width: 200px; height: 200px; border-bottom: px solid #00000000;">
+            <h4 class="text-white">Mark Your Attendance-In</h4>
+            <div class="border-button">
+              <a href='/camera_view_in/'>Let's Go</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 ">
+        <div class="pricing-item "style="background-color: #0a3257;">
+          <img  src="{% static 'recognition/img/outw.png' %}" alt="" style="width: 280px; height: 200px; border-bottom: px solid #00000000; ">
+          <h4 class="text-white">Mark Your Attendance-Out</h4>
+            <div class="border-button">
+              <a href='/camera_view_out/'>Let's Go</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="pricing-item "style="background-color: #0a3257;">
+            <img  src="{% static 'recognition/img/admi.png' %}" alt="" style="width: 210px; height: 200px; border-right: 40px solid #00000000; ">
+            <h4 class="text-white">Login</h4>
+            <div class="border-button">
+              <a href='/login_view/'>Let's Go</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+ <footer style="background-color: #0a3257;">
+    <div class="container" >
+      <div class="row" >
+        <div class="col-lg-12 text-center">
+          <p> Copyright © 2024 All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

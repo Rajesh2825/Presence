@@ -1,0 +1,200 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'recognition/css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <title>Attendance System</title>
+    <style>
+        div {
+            text-align: center;
+            background-color: rgb(10, 50, 87);
+        }
+        video {
+            width: 100%;
+            height: auto;
+            max-width: 600px; 
+            border: 2px solid white;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="main-header navbar bg-white navbar-white p-0">
+        <a href="/" class="navbar-brand">
+          <img
+            src="{% static 'recognition/img/logo3.png' %}"
+            alt="AdminLTE Logo"
+            class="img-circle"
+            style="width: 140px; height: 60px; margin-left: 10px"
+          />
+        </a>
+        <h1 class="text-white text-center display-3 text-uppercase"></h1>
+        <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+          <li class="nav-item dropdown">
+            <a
+              class="button btn btn-primary"
+              href="/"
+              style="margin-right: 10px"
+              >Home</a
+            >
+          </li>
+        </ul>
+    </nav>
+    <div>
+        <h1 class="pt-4 pb-3 text-white">Mark Attendance in</h1>
+        <video id="video" autoplay playsinline></video><br>
+        <button  class="mt-3 mb-5 py-2 px-3 button btn btn-primary" id="capture">Capture</button>
+        <canvas id="canvas" width="600" height="480" style="display:none;"></canvas>
+    </div>
+
+    <footer class="mt-2" style="background-color: white;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center" style="background-color: white;">
+                 <h5 class="text-dark text-bold"> Copyright © 2024 All rights reserved.</h5>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Custom Modal for displaying messages -->
+<div id="customModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h5 id="modalMessage"></h5>
+        <button class="button btn" id="closeModal">OK</button>
+    </div>
+</div>
+
+<style>
+    /* Modal Styles */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%;
+        text-align: center;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    #closeModal {
+        width: auto; /* Set to auto to make the button size fit its content */
+        padding: 10px 20px; /* Optional: Adjust padding for button size */
+        margin: 20px auto; /* Center the button with margin */
+        display: inline-block; /* Make it inline-block to allow setting width */
+    }
+    
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture');
+        const context = canvas.getContext('2d');
+        
+        const modal = document.getElementById("customModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalMessage = document.getElementById("modalMessage");
+        const closeModal = document.getElementById("closeModal");
+    
+        // Function to start the video stream from the webcam
+        function startVideoStream() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(err => {
+                    console.error("Error accessing camera: ", err);
+                    showCustomModal("Error", "Error accessing camera: " + err.message);
+                });
+        }
+    
+        // Start the video stream when the page loads
+        startVideoStream();
+    
+        // Function to display the custom modal with a title and message
+        function showCustomModal(title, message) {
+            modalMessage.textContent = message;
+            modal.style.display = "block";  // Show the modal
+        }
+    
+        // Close modal when user clicks the close button (x)
+        closeModal.onclick = function() {
+            modal.style.display = "none";  // Hide the modal
+        }
+    
+        // Close modal if the user clicks anywhere outside the modal
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";  // Hide the modal
+            }
+        }
+    
+        // Event listener for the capture button
+        captureButton.addEventListener('click', () => {
+            // Capture the current frame from the video and draw it on the canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/png');
+    
+            // Send the captured image to the server using a POST request
+            fetch('/mark_attendance_in/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ image: imageData })  // Send the image data
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                
+                // Display success or error message in the custom modal
+                if (data.status === 'success') {
+                    showCustomModal("Attendance Mark", data.message);  // Show success message
+                } else {
+                    showCustomModal("Attendance Mark", data.message);  // Show error message
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                showCustomModal("Error", "An error occurred while marking attendance.");  // Show generic error message
+            });
+        });
+    </script>
+</body>
+</html>

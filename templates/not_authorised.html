@@ -1,0 +1,80 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+	  <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="shortcut icon" href="{% static 'recognition/img/logo2.png' %}" />
+  <style>
+    /* Add custom CSS styles here */
+    body {
+        font-family: 'Oswald', sans-serif !important;
+    }
+    
+    /* Define styles for the main banner */
+    .main-banner {
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        padding-top: 150px;
+        padding-bottom: 130px;
+        text-align: center;
+        background-color: #0a3257;
+    }
+  </style>
+
+	
+</head>
+<body>
+  <nav class="main-header navbar">
+
+    <a href="/" class="navbar-brand">
+      <img
+        src="{% static 'recognition/img/logo3.png' %}"
+        alt="AdminLTE Logo"
+        class="img-circle"
+        style="width: 200px; height:60px; margin-left: 30px;"
+      />
+    </a>
+    <h1 class="text-white text-center display-3 text-uppercase"></h1>
+    <!--Right navbar links-->
+    <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+      <li class="nav-item dropdown">
+        <a class="button btn btn-primary" href="/" style="margin-right: 80px;">Home</a>
+      </li>
+    </ul>
+
+  </nav>
+
+  <div class="main-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+          <div class="header-text text-danger text-bold">
+            <h2>Sorry {{user.username}},<br> You are not authorised to view this page.</h2>
+            <div class="buttons mt-5">
+              <div class="big-border-button">
+                <a class="button btn btn-primary" id="markattendance" href='/login_view/'>Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+  </html>
