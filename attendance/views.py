@@ -262,133 +262,79 @@ def view_student_attendance(request):
 
 # attendance in and out views.....
 
-def camera_view_in(request):
-    return render(request, 'camera_view_in.html')
-
 def mark_attendance_in(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
-            data = json.loads(request.body)
-            image_data = data.get('image', None)
-
-            if not image_data:
-                return JsonResponse({'status': 'error', 'message': 'No image data provided.'})
-
-            image_data = image_data.split(",")[1]
-            image = Image.open(BytesIO(base64.b64decode(image_data)))
-
-            if image.mode == 'RGBA':
-                image = image.convert('RGB')
-
-
-            image_np = np.array(image)
-
-            rgb_image = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
-
-            face_locations = face_recognition.face_locations(rgb_image, model="cnn")
-
-            face_encodings = face_recognition.face_encodings(rgb_image, face_locations)
-
-            if len(face_encodings) == 0:
-                return JsonResponse({'status': 'error', 'message': 'No face detected in the image.'})
-
+            face_classifier = cv2.CascadeClassifier(
+            cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+            )
+            
+            video_capture = cv2.VideoCapture(0)
+            
+            def detect_bounding_box(vid):
+                gray_image = cv2.cvtColor(vid, cv2.COLOR_BGR2GRAY)
+                faces = face_classifier.detectMultiScale(gray_image, 1.1, 5, minSize=(40, 40))
+                return faces
+            
             students = Student.objects.exclude(face_encoding__isnull=True)
-            student_encodings = [(student.get_face_encoding(), student) for student in students]
+            student_encodings = []
 
-            for face_encoding in face_encodings:
-                matches = face_recognition.compare_faces(
-                    [encoding[0] for encoding in student_encodings], face_encoding)
-
-                if True in matches:
-                    first_match_index = matches.index(True)
-                    matched_student = student_encodings[first_match_index][1]
-
-                    return mark_attendance_in_db(matched_student.user)
-                else:
-                    return JsonResponse({'status': 'error', 'message': 'No match found for the detected face.'})
-
-        except Exception as e:
-            print('An error occurred', e)
-            return JsonResponse({'status': 'error', 'message': f'An error occurred: {str(e)}'})
-
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
-
-        
-    
-    
-    # if request.method == 'GET':
-    #     try:
-    #         face_classifier = cv2.CascadeClassifier(
-    #         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-    #         )
+            for student in students:
+                encoding = student.get_face_encoding()  
+                student_encodings.append((encoding, student))
+                marked_students = set()
             
-    #         video_capture = cv2.VideoCapture(0)
-            
-    #         def detect_bounding_box(vid):
-    #             gray_image = cv2.cvtColor(vid, cv2.COLOR_BGR2GRAY)
-    #             faces = face_classifier.detectMultiScale(gray_image, 1.1, 5, minSize=(40, 40))
-    #             return faces
-            
-    #         students = Student.objects.exclude(face_encoding__isnull=True)
-    #         student_encodings = []
+            while True:
 
-    #         for student in students:
-    #             encoding = student.get_face_encoding()  
-    #             student_encodings.append((encoding, student))
-    #             marked_students = set()
-            
-    #         while True:
+                    result, video_frame = video_capture.read() 
+                    if result is False:
+                        break 
 
-    #                 result, video_frame = video_capture.read() 
-    #                 if result is False:
-    #                     break 
-
-    #                 faces = detect_bounding_box(
-    #                     video_frame
-    #                 )
+                    faces = detect_bounding_box(
+                        video_frame
+                    )
                     
                     
-    #                 if len(faces) > 0:
-    #                     rgb_frame = cv2.cvtColor(video_frame, cv2.COLOR_BGR2RGB)
-    #                     face_locations = face_recognition.face_locations(rgb_frame)
-    #                     face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
+                    if len(faces) > 0:
+                        rgb_frame = cv2.cvtColor(video_frame, cv2.COLOR_BGR2RGB)
+                        face_locations = face_recognition.face_locations(rgb_frame)
+                        face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
 
-    #                     for (face_encoding, face_location) in zip(face_encodings, face_locations):
-    #                         matches = face_recognition.compare_faces([encoding[0] for encoding in student_encodings], face_encoding)
+                        for (face_encoding, face_location) in zip(face_encodings, face_locations):
+                            matches = face_recognition.compare_faces([encoding[0] for encoding in student_encodings], face_encoding)
 
-    #                         if True in matches:
-    #                             first_match_index = matches.index(True)
-    #                             matched_student = student_encodings[first_match_index][1]
+                            if True in matches:
+                                first_match_index = matches.index(True)
+                                matched_student = student_encodings[first_match_index][1]
 
-    #                             if matched_student.id not in marked_students:
-    #                                 mark_attendance_in_db(matched_student.user)
-    #                                 marked_students.add(matched_student.id)
+                                if matched_student.id not in marked_students:
+                                    mark_attendance_in_db(matched_student.user)
+                                    marked_students.add(matched_student.id)
 
-    #                             (top, right, bottom, left) = face_location 
-    #                             cv2.rectangle(video_frame, (left, top), (right, bottom), (0, 255, 0), 2)
-    #                             cv2.putText(video_frame, matched_student.name, 
-    #                                         (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
-    #                         else:
-    #                             (top, right, bottom, left) = face_location
-    #                             cv2.rectangle(video_frame, (left, top), (right, bottom), (0, 0, 255), 2)
-    #                             cv2.putText(video_frame, "No Match Found", 
-    #                                         (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+                                (top, right, bottom, left) = face_location 
+                                cv2.rectangle(video_frame, (left, top), (right, bottom), (0, 255, 0), 2)
+                                cv2.putText(video_frame, matched_student.name, 
+                                            (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+                            else:
+                                (top, right, bottom, left) = face_location
+                                cv2.rectangle(video_frame, (left, top), (right, bottom), (0, 0, 255), 2)
+                                cv2.putText(video_frame, "No Match Found", 
+                                            (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
                                             
-    #                 cv2.imshow(
-    #                     "Attendance System", video_frame
-    #                 ) 
-    #                 if cv2.waitKey(1) & 0xFF == ord("q"):
-    #                     break
-    #         video_capture.release()
-    #         cv2.destroyAllWindows()
-    #         return redirect('/') 
-    #     except Exception as e:
-    #         print(f"An error occurred: {str(e)}")
-    #         return redirect('/') 
-    # else:
-    #     print("Invalid request method.")
-    #     return redirect('/') 
+                    cv2.imshow(
+                        "Attendance System", video_frame
+                    ) 
+                    if cv2.waitKey(1) & 0xFF == ord("q"):
+                        break
+            video_capture.release()
+            cv2.destroyAllWindows()
+            return redirect('/') 
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return redirect('/') 
+    else:
+        print("Invalid request method.")
+        return redirect('/') 
         
 def mark_attendance_in_db(user):
     try:
@@ -423,144 +369,91 @@ def mark_attendance_in_db(user):
             })
 
     except Student.DoesNotExist:
-        print("Student does not exist.")
         return JsonResponse({
             'status': 'error',
             'message': "Student does not exist."
         }, status=404)
     except Exception as e:
-        print(f"An error occurred while marking attendance: {str(e)}")
         return JsonResponse({
             'status': 'error',
             'message': f"An error occurred while marking attendance: {str(e)}"
         }, status=500)
         
-
-def camera_view_out(request):
-    return render(request, 'camera_view_out.html')
+        
         
 def mark_attendance_out(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
-            data = json.loads(request.body)
-            image_data = data.get('image', None)
-
-            if not image_data:
-                return JsonResponse({'status': 'error', 'message': 'No image data provided.'})
-
-            image_data = image_data.split(",")[1]
-            image = Image.open(BytesIO(base64.b64decode(image_data)))
-
-            if image.mode == 'RGBA':
-                image = image.convert('RGB')
-
-
-            image_np = np.array(image)
-
-            rgb_image = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
-
-            face_locations = face_recognition.face_locations(rgb_image, model="cnn")
-
-            face_encodings = face_recognition.face_encodings(rgb_image, face_locations)
-
-            if len(face_encodings) == 0:
-                return JsonResponse({'status': 'error', 'message': 'No face detected in the image.'})
-
+            face_classifier = cv2.CascadeClassifier(
+            cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+            )
+            
+            video_capture = cv2.VideoCapture(0)
+            
+            def detect_bounding_box(vid):
+                gray_image = cv2.cvtColor(vid, cv2.COLOR_BGR2GRAY)
+                faces = face_classifier.detectMultiScale(gray_image, 1.1, 5, minSize=(40, 40))
+                return faces
+            
             students = Student.objects.exclude(face_encoding__isnull=True)
-            student_encodings = [(student.get_face_encoding(), student) for student in students]
+            student_encodings = []
 
-            for face_encoding in face_encodings:
-                matches = face_recognition.compare_faces(
-                    [encoding[0] for encoding in student_encodings], face_encoding)
-
-                if True in matches:
-                    first_match_index = matches.index(True)
-                    matched_student = student_encodings[first_match_index][1]
-
-                    return mark_attendance_out_db(matched_student.user)
-                else:
-                    return JsonResponse({'status': 'error', 'message': 'No match found for the detected face.'})
-
-        except Exception as e:
-            print('An error occurred', e)
-            return JsonResponse({'status': 'error', 'message': f'An error occurred: {str(e)}'})
-
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
-
-    
-#     if request.method == 'GET':
-#         try:
-#             face_classifier = cv2.CascadeClassifier(
-#             cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-#             )
+            for student in students:
+                encoding = student.get_face_encoding()  
+                student_encodings.append((encoding, student))
+                marked_students = set()
             
-#             video_capture = cv2.VideoCapture(0)
-            
-#             def detect_bounding_box(vid):
-#                 gray_image = cv2.cvtColor(vid, cv2.COLOR_BGR2GRAY)
-#                 faces = face_classifier.detectMultiScale(gray_image, 1.1, 5, minSize=(40, 40))
-#                 return faces
-            
-#             students = Student.objects.exclude(face_encoding__isnull=True)
-#             student_encodings = []
+            while True:
 
-#             for student in students:
-#                 encoding = student.get_face_encoding()  
-#                 student_encodings.append((encoding, student))
-#                 marked_students = set()
-            
-#             while True:
+                    result, video_frame = video_capture.read() 
+                    if result is False:
+                        break 
 
-#                     result, video_frame = video_capture.read() 
-#                     if result is False:
-#                         break 
-
-#                     faces = detect_bounding_box(
-#                         video_frame
-#                     )
+                    faces = detect_bounding_box(
+                        video_frame
+                    )
                     
                     
-#                     if len(faces) > 0:
-#                         rgb_frame = cv2.cvtColor(video_frame, cv2.COLOR_BGR2RGB)
-#                         face_locations = face_recognition.face_locations(rgb_frame)
-#                         face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
+                    if len(faces) > 0:
+                        rgb_frame = cv2.cvtColor(video_frame, cv2.COLOR_BGR2RGB)
+                        face_locations = face_recognition.face_locations(rgb_frame)
+                        face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
 
-#                         for (face_encoding, face_location) in zip(face_encodings, face_locations):
-#                             matches = face_recognition.compare_faces([encoding[0] for encoding in student_encodings], face_encoding)
+                        for (face_encoding, face_location) in zip(face_encodings, face_locations):
+                            matches = face_recognition.compare_faces([encoding[0] for encoding in student_encodings], face_encoding)
 
-#                             if True in matches:
-#                                 first_match_index = matches.index(True)
-#                                 matched_student = student_encodings[first_match_index][1]
+                            if True in matches:
+                                first_match_index = matches.index(True)
+                                matched_student = student_encodings[first_match_index][1]
 
-#                                 if matched_student.id not in marked_students:
-#                                     mark_attendance_out_db(matched_student.user)
-#                                     marked_students.add(matched_student.id)
+                                if matched_student.id not in marked_students:
+                                    mark_attendance_out_db(matched_student.user)
+                                    marked_students.add(matched_student.id)
 
-#                                 (top, right, bottom, left) = face_location 
-#                                 cv2.rectangle(video_frame, (left, top), (right, bottom), (0, 255, 0), 2)
-#                                 cv2.putText(video_frame, matched_student.name, 
-#                                             (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
-#                             else:
-#                                 (top, right, bottom, left) = face_location
-#                                 cv2.rectangle(video_frame, (left, top), (right, bottom), (0, 0, 255), 2)
-#                                 cv2.putText(video_frame, "No Match Found", 
-#                                             (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+                                (top, right, bottom, left) = face_location 
+                                cv2.rectangle(video_frame, (left, top), (right, bottom), (0, 255, 0), 2)
+                                cv2.putText(video_frame, matched_student.name, 
+                                            (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+                            else:
+                                (top, right, bottom, left) = face_location
+                                cv2.rectangle(video_frame, (left, top), (right, bottom), (0, 0, 255), 2)
+                                cv2.putText(video_frame, "No Match Found", 
+                                            (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
                                             
-#                     cv2.imshow(
-#                         "Attendance System", video_frame
-#                     ) 
-#                     if cv2.waitKey(1) & 0xFF == ord("q"):
-#                         break
-#             video_capture.release()
-#             cv2.destroyAllWindows()
-#             return redirect('/') 
-#         except Exception as e:
-#             print(f"An error occurred: {str(e)}")
-#             return redirect('/') 
-#     else:
-#         print("Invalid request method.")
-#         return redirect('/') 
+                    cv2.imshow(
+                        "Attendance System", video_frame
+                    ) 
+                    if cv2.waitKey(1) & 0xFF == ord("q"):
+                        break
+            video_capture.release()
+            cv2.destroyAllWindows()
+            return redirect('/') 
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return redirect('/') 
+    else:
+        print("Invalid request method.")
+        return redirect('/') 
     
 def mark_attendance_out_db(user):
     try:
@@ -571,7 +464,6 @@ def mark_attendance_out_db(user):
 
         if attendance_record.check_in_time:
             if attendance_record.check_out_time:
-                print(f"Check-out already marked for {student.name} on {today}.")
                 return JsonResponse({
                 "status": "success",
                 "message": f"Check-out already marked for {student.name} on {today}."
@@ -579,26 +471,22 @@ def mark_attendance_out_db(user):
             else:
                 attendance_record.check_out_time = timezone.now()
                 attendance_record.save()
-                print(f"Check-out marked for {student.name} on {today}.")
                 return JsonResponse({
                 "status": "success",
                 "message": f"Check-out marked for {student.name} on {today}."
                 })
         else:
-            print(f"No check-in record found for {student.name} on {today}. Cannot mark check-out.")
             return JsonResponse({
             "status": "error",
             "message": f"No check-in record found for {student.name} on {today}. Cannot mark check-out."
             })
             
     except Student.DoesNotExist:
-        print("Student does not exist.")
         return JsonResponse({
         "status": "error",
         "message": "Student does not exist."
         }, status=404)
     except Exception as e:
-        print(f"An error occurred while marking attendance: {str(e)}")
         return JsonResponse({
         "status": "error",
         "message": f"An error occurred while marking attendance: {str(e)}"
