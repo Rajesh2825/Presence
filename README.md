@@ -43,7 +43,7 @@ cd Presence
     pip install -r requirements.txt
     ```
 
-4. Set up environment variables: Create a `.env` file in the project root with the following structure:
+4. Set up environment variables: Create a `project.env` file in the project root with the following structure:
     ```plaintext
     SECRET_KEY=your_django_secret_key
     DB_NAME=your_database_name
